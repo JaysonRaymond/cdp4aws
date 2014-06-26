@@ -6,7 +6,7 @@
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.20.js"></script>
 <script type="text/javascript">
 /**
- * The following implementation of the RequestQueue Cloud Architectural Design Pattern on AWS SQS is based on
+ * The following implementation of the RequestQueue Cloud Design Pattern on AWS SQS is based on
  * the AWS SQS API documented at:  http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/frames.html
  */
     // Assure the user associated with these credentials only has permission to create and read from
@@ -35,57 +35,16 @@ function renderInitialized() {
  */
 function renderSendSuccess(command, sendResult) {
     var textArea = document.getElementById('commandsTextArea');
-    textArea.value += '\r\nSent command:[' + command + '] in message#' + sendResult.MessageId;
+    textArea.value += '\r\nSent command:[' + command + '] in #' + sendResult.MessageId;
 }
 
 /**
  * Show successful receive results.
  */
 function renderReceiveSuccess(messages) {
-//            data (Object) — the de-serialized data returned from the request. Set to null if a request error occurs. The data object has the following properties:
-//            Messages — (Array<map>)
-//            A list of messages.
-//
-//            MessageId — (String)
-//            A unique identifier for the message. Message IDs are considered unique across all AWS accounts for an extended period of time.
-//
-//            ReceiptHandle — (String)
-//            An identifier associated with the act of receiving the message. A new receipt handle is returned every time you receive a message. When deleting a message, you provide the last received receipt handle to delete the message.
-//
-//            MD5OfBody — (String)
-//            An MD5 digest of the non-URL-encoded message body string.
-//
-//            Body — (String)
-//            The message's contents (not URL-encoded).
-//
-//            Attributes — (map<String>)
-//            SenderId, SentTimestamp, ApproximateReceiveCount, and/or ApproximateFirstReceiveTimestamp. SentTimestamp and ApproximateFirstReceiveTimestamp are each returned as an integer representing the epoch time in milliseconds.
-//
-//            MD5OfMessageAttributes — (String)
-//            An MD5 digest of the non-URL-encoded message attribute string. This can be used to verify that Amazon SQS received the message correctly. Amazon SQS first URL decodes the message before creating the MD5 digest. For information about MD5, go to http://www.faqs.org/rfcs/rfc1321.html.
-//
-//            MessageAttributes — (map<map>)
-//            Each message attribute consists of a Name, Type, and Value. For more information, see Message Attribute Items.
-//
-//            StringValue — (String)
-//            Strings are Unicode with UTF8 binary encoding. For a list of code values, see http://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters.
-//
-//            BinaryValue — (Buffer, Typed Array, Blob, String)
-//            Binary type attributes can store any binary data, for example, compressed data, encrypted data, or images.
-//
-//            StringListValues — (Array<String>)
-//            Not implemented. Reserved for future use.
-//
-//            BinaryListValues — (Array<Buffer, Typed Array, Blob, String>)
-//            Not implemented. Reserved for future use.
-//
-//            DataType — required — (String)
-//            Amazon SQS supports the following logical data types: String, Number, and Binary. In addition, you can append your own custom labels. For more information, see Message Attribute Data Types.
-//
-
     var textArea = document.getElementById('resultsTextArea');
     for (var i = 0; i < messages.length; i++) {
-        textArea.value += '\r\nResult ['+messages[i].Body+'] for command in message#' + messages[i].MessageId;
+        textArea.value += '\r\nResult ['+messages[i].Body+'] for #' + messages[i].MessageAttributes['InResponseTo'].StringValue;
     }
 }
 
@@ -137,6 +96,7 @@ function deleteResultQueueOnExit() {
  * Create a temporary queue to hold the results of our Commands.
  * We'll set the Queue to hold the connection for 1 second, and reconnect every 2.
  */
+// TODO Move this to the CommandProcessors responsibility, reducing permissions required of clients
 function createTemporaryResultQueue() {
     resultQueueName = generateUniqueResultQueueName();
     var params = {
@@ -190,7 +150,10 @@ function receive() {
         QueueUrl: resultQueueURL,
         MaxNumberOfMessages: 10, // how many messages do we wanna retrieve?
         VisibilityTimeout: 60, // seconds - how long we want a lock on this job
-        WaitTimeSeconds: 15 // seconds - how long should we wait for a message?
+        WaitTimeSeconds: 15, // seconds - how long should we wait for a message?
+        MessageAttributeNames: [
+            'InResponseTo'
+          ]
     }
     resultQueue.receiveMessage(params, function (err, data) {
         if (err) console.error(err);
@@ -240,21 +203,31 @@ createTemporaryResultQueue();
 </script>
 </head>
 <body onunload="deleteResultQueueOnExit()">
-<h3> This is an example of the
-    <a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
-        Queueing Command Pattern</a> implemented on <a href="http://aws.amazon.com/sqs/">AWS SQS</a>.
+<h3><a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
+        Queueing</a> on <a href="http://aws.amazon.com/sqs/">AWS SQS</a>.
 </h3>
-
+<p>
+    This is an example of using the
+    <a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
+    Queueing</a> Cloud Design Pattern.
+</p>
 <p>The idea is to asynchronously send commands to a request queue so that it can be handled by a scalable number of
     nodes (horizontal scaling). The results from all of the nodes are placed on a result queue (established by this
     client) which is polled, rendered and subsequently deleted by this client.
 </p>
 
 <p>
-    This implementation uses the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/index.html">AWS SQS
-    Javascript
-    library</a> which allows desktop/settop/mobile browsers and hybrid applications to all directly access the SQS
-    service without requiring an intermediate gateway.
+    The <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/javascript-client/index.html">client
+    implementation</a> uses the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/index.html">AWS SQS
+    Javascript library</a> which allows desktop/settop/mobile browsers and hybrid applications to all directly access
+    the SQS service without requiring an intermediate gateway.
+</p>
+<p>
+    The backend
+    <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/command-processor/src/main/java/CommandProcessor.java">
+    implementation of the Command Processor</a> leverages <a href="http://camel.apache.org/">Apache Camel</a> for its
+    significant utility and can be run on <a href="http://aws.amazon.com/ec2/">EC2</a> or better yet,
+    <a href="http://aws.amazon.com/elasticbeanstalk/">Elastic Beanstalk</a> instances.
 </p>
 <br>
 
@@ -267,17 +240,16 @@ createTemporaryResultQueue();
     Command to Request:
     <ul>
         <li>
-            <button onclick="request('TIME', 1)">Report the time at which the Command was processed by a compute node
-            </button>
-            <button onclick="request('TIME', 100)">100x</button>
-        </li>
-        <li>
             <button onclick="request('IP', 1)">Report the IP address of the compute node fulfilling the request</button>
             <button onclick="request('IP', 100)">100x</button>
         </li>
+        <li>
+            <button onclick="request('TIME', 1)">Report the time at which the Command was processed by a compute node</button>
+            <button onclick="request('TIME', 100)">100x</button>
+        </li>
     </ul>
-    <textarea id="commandsTextArea" cols="64" rows="25" readonly></textarea>
-    <textarea id="resultsTextArea" cols="64" rows="25" readonly></textarea>
+    <textarea id="commandsTextArea" cols="53" rows="25" readonly></textarea>
+    <textarea id="resultsTextArea" cols="70" rows="25" readonly></textarea>
 </div>
 <br>
 </body>
