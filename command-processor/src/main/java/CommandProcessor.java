@@ -1,7 +1,9 @@
+import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.aws.sqs.SqsConstants;
 import org.apache.camel.main.Main;
 
 import java.io.FileInputStream;
@@ -9,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -31,6 +36,7 @@ import java.util.logging.Logger;
  *         Date: 6/17/14
  *         Time: 6:09 AM
  */
+// TODO Add Response Queue Reaper
 public class CommandProcessor {
     public static final Logger LOGGER = Logger.getLogger(CommandProcessor.class.getName());
     public static final String CONFIGURATION_PATH = System.getProperty("user.home")+"/.aws/credentials/AwsCredentials.properties";
@@ -43,7 +49,8 @@ public class CommandProcessor {
         TIME {
             @Override
             String execute() {
-                return SimpleDateFormat.getDateInstance().format(new Date());
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                return formatter.format(new Date());
             }
         },
         IP {
@@ -79,6 +86,12 @@ public class CommandProcessor {
             catch (RuntimeException e) { command = Command.UNRECOGNIZED; }
             // ...execute the command, ending the results to the message body
             message.setBody(command.execute());
+            Map<String, Object> messageAttributes = (Map<String, Object>) message.getHeader(SqsConstants.MESSAGE_ATTRIBUTES, new HashMap<String, String>(), Map.class);
+            MessageAttributeValue inResponseToAttribute = new MessageAttributeValue();
+            inResponseToAttribute.setStringValue((String) message.getHeader(SqsConstants.MESSAGE_ID));
+            inResponseToAttribute.setDataType("String");
+            messageAttributes.put("InResponseTo", inResponseToAttribute);
+            message.setHeader(SqsConstants.MESSAGE_ATTRIBUTES, messageAttributes);
             //  Send it on again, with original headers in tact and only the body changed.
             exchange.setOut(message);
             LOGGER.info("Sent: "+message);
