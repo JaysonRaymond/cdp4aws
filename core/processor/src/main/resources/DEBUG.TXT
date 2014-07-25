@@ -1,0 +1,43 @@
+PROBLEM:
+
+On queue - Message has ReplyTo attribute.
+
+Upon receipt by CommandProcessor attribute not present.
+In ReceiveMessage must be an option to retrieve that.
+
+
+- - - - - - - - - - - - - - -
+Camel AWS SQS is supporting this:
+- - - - - - - - - - - - - - -
+AttributeName.member.N
+A list of attributes that need to be returned along with each message.
+
+The following lists the names and descriptions of the attributes that can be returned:
+
+All - returns all values.
+ApproximateFirstReceiveTimestamp - returns the time when the message was first received (epoch time in milliseconds).
+ApproximateReceiveCount - returns the number of times a message has been received but not deleted.
+SenderId - returns the AWS account number (or the IP address, if anonymous access is allowed) of the sender.
+SentTimestamp - returns the time when the message was sent (epoch time in milliseconds).
+Type: String list
+
+Required: No
+
+- - - - - - - - - - - - - - -
+Camel AWS SQS is NOT supporting this:
+- - - - - - - - - - - - - - -
+
+MessageAttributeName.member.N
+The name of the message attribute, where N is the index. The message attribute name can contain the following characters: A-Z, a-z, 0-9, underscore (_), hyphen (-), and period (.). The name must not start or end with a period, and it should not have successive periods. The name is case sensitive and must be unique among all attribute names for the message. The name can be up to 256 characters long. The name cannot start with "AWS." or "Amazon." (or any variations in casing), because these prefixes are reserved for use by Amazon Web Services.
+
+When using ReceiveMessage, you can send a list of attribute names to receive, or you can return all of the attributes by specifying "All" or ".*" in your request. You can also use "foo.*" to return all message attributes starting with the "foo" prefix.
+
+Type: String list
+
+Required: No
+
+
+
+Added support for this.
+
+Now header/map is not being found as an expression : CamelAwsSqsMessageAttributes[ReplyTo]

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.accelerantmobile</groupId>
+        <artifactId>accelerant-pom</artifactId>
+        <version>42</version>
+        <relativePath>../../../accelerant-pom</relativePath>
+    </parent>
+
+    <name>cdp4aws Parent POM</name>
+        <groupId>cdp4aws</groupId>
+        <artifactId>cdp4aws-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    <description>The POM inherited by all cdp4aws component POMs.</description>
+
+
+    <properties>
+        <rootArtifactId>cdp4aws</rootArtifactId><!-- used in artifact naming, must be all lowercase, no spaces -->
+        <rootGroupId>cdp4aws</rootGroupId>      <!-- used in groupId naming, must be all lowercase, no spaces -->
+        <appTitle>Cloud Design Patterns for AWS</appTitle><!-- for humans, typically first letter capitalized, spaces allowed -->
+
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <build-timestamp>${maven.build.timestamp}</build-timestamp>
+        <!-- Because maven uses Velocity templating which doesn't support '.' in variable names, we duplicate here so
+        we can access these values from resources -->
+        <projectVersion>1.0-SNAPSHOT</projectVersion>
+        <camel-version>2.6.1</camel-version>
+    </properties>
+
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>scp://site.accelerantmobile.com/var/apache2/2.2/htdocs/${rootGroupId}/${rootArtifactId}/${project.version}</url>
+        </site>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <!-- Centrally define and manage the libraries used by multiple CardPals components -->
+        <dependencies>
+            <dependency>
+                <artifactId>cdp4aws-core-processor</artifactId>
+                <groupId>${project.groupId}</groupId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.8.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+               <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-maven-plugin</artifactId>
+                    <version>${camel-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.6</version>
+                </plugin>
+           </plugins>
+        </pluginManagement>
+
+
+        <!-- This forces all projects to install their sources and test sources into the repository, which is ideal
+             for debugging specific versions of code (but the antithesis of closed source projects).
+             -->
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-test-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- inherit site.xml across all modules -->
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-site-descriptor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>

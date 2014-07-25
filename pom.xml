@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cdp4aws</groupId>
+        <artifactId>cdp4aws-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>parent</relativePath>
+    </parent>
+
+    <artifactId>cdp4aws</artifactId>
+
+    <name>Cloud Design Patterns for Amazon Web Services (cdp4aws)</name>
+    <description>Implementations of Cloud Design Patterns using Amazon’s Web Services.</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- Because maven uses Velocity templating which doesn't support '.' in variable names, we duplicate here so
+        we can access these values from resources -->
+        <projectArtifactId>cdp4aws</projectArtifactId>
+    </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:JaysonRaymond/cdp4aws.git</connection>
+        <developerConnection>scm:git:git@github.com:JaysonRaymond/cdp4aws.git</developerConnection>
+        <url>https://github.com/JaysonRaymond/cdp4aws</url>
+        <tag>HEAD</tag>
+    </scm>
+
+  <modules>
+    <module>parent</module>
+    <module>core</module>
+    <module>examples</module>
+  </modules>
+
+</project>

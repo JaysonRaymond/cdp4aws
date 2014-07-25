@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cdp4aws</groupId>
+        <artifactId>cdp4aws-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../parent</relativePath>
+    </parent>
+
+    <artifactId>cdp4aws-core-processor</artifactId>
+    <name>cdp4aws Request Queueing Processor</name>
+    <description>A Request Queueing Processor used for the RequestQueueing Cloud Design Pattern</description>
+
+    <properties>
+        <!--<camel-version>2.13.1</camel-version>-->
+        <camel-version>2.14-SNAPSHOT</camel-version>
+        <user-home>${user.home}</user-home>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <!-- Leverage the features of Apache Camel... -->
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+            <version>${camel-version}</version>
+        </dependency>
+        <dependency>
+            <!-- ...particularly it's AWS components... -->
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-aws</artifactId>
+            <version>${camel-version}</version>
+        </dependency>
+        <dependency>
+            <!-- while camel uses slf4j for pluggable logging, we include the logging mechanism used by camel in order
+                 to best track what's happening at runtime -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>com.alexecollins.docker</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
+            </plugin>
+
+            <plugin>
+                <!-- Launch our App during build: http://camel.apache.org/camel-maven-plugin.html -->
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>CommandProcessor</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+              <!-- Package into a single executable jar -->
+              <artifactId>maven-assembly-plugin</artifactId>
+              <configuration>
+                <archive>
+                  <manifest>
+                    <mainClass>RequestQueueing</mainClass>
+                  </manifest>
+                </archive>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                  <phase>package</phase> <!-- bind to the packaging phase -->
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+
+            <!-- If this POM inherited, this forces all projects to install their sources and test sources into the repository, which is ideal
+                 for debugging specific versions of code (but the antithesis of closed source projects).
+                 -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-test-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- inherit site.xml across all modules -->
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-site-descriptor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+            </plugin>
+
+            <plugin>
+                <!-- Create diagrams of our configuration: http://camel.apache.org/camel-maven-plugin.html -->
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

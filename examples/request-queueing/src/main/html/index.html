@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Request Queueing Pattern</title>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.20.js"></script>
+<script type="text/javascript">
+</script>
+<script src="js/CDP4AWS.js"></script>
+<script type="text/javascript">
+    /**
+     * Create an instance of cdp4aws RequestQueuer
+     *
+     * Configure CDP4AWS with AWS region, account number, credentials for this application.
+     *
+     * Because these are so publicly visible it is critical to assure the Role the accessKeyId represents
+     * has only permissions to write to the Requests queue and read/delete from the Results_* queues. Leaving open any
+     * other permissions _will_ be quickly exploited on the web to rack up expensive computing bills
+     * (speaking from direct experience).
+     *
+     * Note this should be a different user/role than the CommandProcessor uses because the CommandProcessor will need the
+     * ability to create queues (the Result queues) - but we don't want the general public to be able to create them.
+     */
+    var cdp4aws = CDP4AWS.create('us-west-2',"448119886995", 'AKIAJ4CYKGBVSWGLV7PA', '1zAhWluSo0GLBBFUhpJeg+U3RH9gs2psdbu8IP4V');
+
+    /**
+     * Show the outcome of the initial send.
+     */
+    function renderSendOutcome(command, err, sendResult) {
+        if (err) console.error(err);
+        else {
+            var textArea = document.getElementById('commandsTextArea');
+            textArea.value += '\r\nSent command:[' + command + '] in #' + sendResult.MessageId;
+        }
+    }
+
+    /**
+     * Show the message received.
+     */
+    function renderReceiveResult(message) {
+        var textArea = document.getElementById('resultsTextArea');
+        textArea.value += '\r\nResult ['+message.Body+'] for #' + messages.MessageAttributes['CorrelationId'].StringValue;
+    }
+
+    /**
+     * Show any errors encountered when attempting to receive results.
+     */
+    function renderReceiveErrors(err) {
+        console.error(err);
+    }
+
+
+    /**
+     * Send our Command request to an existing Requests queue 'repeat' number of times
+     */
+    function send(command, repeat) {
+        for (var i = 0; i < repeat; i++) {
+            cdp4aws.queueRequest(command,
+                            function(command, err, sendResult) { renderSendOutcome(command, err, sendResult); },
+                            function(message) { renderReceiveResult(message); },
+                            function(err) { renderReceiveErrors(err); }
+            );
+        }
+    }
+    </script>
+</head>
+
+<!-- When we are done, delete our Results queue -->
+<body onunload="cdp4aws.deleteResultQueueOnExit()">
+
+<h3><a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
+        Queueing</a> on <a href="http://aws.amazon.com/sqs/">AWS SQS</a>.
+</h3>
+<p>
+    This is an example of using the
+    <a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
+    Queueing</a> Cloud Design Pattern.
+</p>
+<p>The idea is to asynchronously send commands to a request queue so that it can be handled by a scalable number of
+    nodes (horizontal scaling). The results from all of the nodes are placed on a result queue (established by this
+    client) which is polled, rendered and subsequently deleted by this client.
+</p>
+
+<p>
+    The <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/javascript-client/index.html">client
+    implementation</a> uses the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/index.html">AWS SQS
+    Javascript library</a> which allows desktop/settop/mobile browsers and hybrid applications to all directly access
+    the SQS service without requiring an intermediate gateway.
+</p>
+<p>
+    The backend
+    <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/command-processor/src/main/java/CommandProcessor.java">
+    implementation of the Command Processor</a> leverages <a href="http://camel.apache.org/">Apache Camel</a> for its
+    significant utility and can be run on <a href="http://aws.amazon.com/ec2/">EC2</a> or better yet,
+    <a href="http://aws.amazon.com/elasticbeanstalk/">Elastic Beanstalk</a> instances.
+</p>
+<br>
+
+<div id="commandButtons">
+    Command to Request:
+    <ul>
+        <li>
+            <button onclick="send('IP', 1)">Report the IP address of the compute node fulfilling the request</button>
+            <button onclick="send('IP', 100)">100x</button>
+        </li>
+        <li>
+            <button onclick="send('TIME', 1)">Report the time at which the Command was processed by a compute node</button>
+            <button onclick="send('TIME', 100)">100x</button>
+        </li>
+    </ul>
+    <textarea id="commandsTextArea" cols="53" rows="25" readonly></textarea>
+    <!--<img src="RP-Sequence-BuildingRoute.gif">-->
+    <!--<img src="RP-Sequence-Others.gif">-->
+    <!--<img src="RP-Sequence-Sending.gif">-->
+    <!--<img src="RP-Sequence-Processing.gif">-->
+    <!--<img src="RP-Sequence-Receiving.gif">-->
+    <textarea id="resultsTextArea" cols="70" rows="25" readonly></textarea>
+</div>
+<br>
+</body>
+</html>
