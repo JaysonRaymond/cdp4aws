@@ -1,0 +1,6 @@
+# The default RequestQueueing.RouteBuilder will dynamically load in and use the defined RequestFulfillmentProvider to
+# fulfill requests. Should your requirements dictate more complex message routing, such as forwarding requests to
+# another system, a custom RouteBuilder can be specified here instead.
+cdp4aws.core.RequestQueueing.RouteBuilder
+
+# For more on Routes and RouteBuilder, see: http://camel.apache.org/routes.html

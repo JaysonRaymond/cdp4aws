@@ -1,3 +1,7 @@
+package cdp4aws.examples;
+
+import cdp4aws.core.RequestFulfillmentProvider;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
@@ -5,8 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * The CommandProcessor receives a String request, interprets it into a command and executes it.
- * <p/>
+ * The CommandProcessor is an implementation of a RequestFulfillmentProvider that receives a String request, parses it
+ * into a command and executes it.
  */
 public class CommandProcessor extends RequestFulfillmentProvider {
 

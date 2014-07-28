@@ -1,3 +1,5 @@
+package cdp4aws.core;
+
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;

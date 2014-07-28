@@ -1,3 +1,5 @@
+package cdp4aws.core;
+
 import java.util.ServiceLoader;
 
 /**

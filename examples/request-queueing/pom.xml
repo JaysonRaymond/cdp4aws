@@ -39,7 +39,7 @@
               <configuration>
                 <archive>
                   <manifest>
-                    <mainClass>CommandProcessor</mainClass>
+                    <mainClass>cdp4aws.core.RequestQueueing</mainClass>
                   </manifest>
                 </archive>
                 <descriptorRefs>
