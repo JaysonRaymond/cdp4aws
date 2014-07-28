@@ -7,7 +7,7 @@
         <groupId>com.accelerantmobile</groupId>
         <artifactId>accelerant-pom</artifactId>
         <version>42</version>
-        <relativePath>../../../accelerant-pom</relativePath>
+        <relativePath>../../../accelerant/accelerant-pom</relativePath>
     </parent>
 
     <name>cdp4aws Parent POM</name>
@@ -122,6 +122,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
             </plugin>
         </plugins>
     </reporting>

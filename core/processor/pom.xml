@@ -109,12 +109,14 @@
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <groupId>org.apache.maven.plugins</groupId>
+                <version>2.6</version>
             </plugin>
 
             <plugin>
                 <!-- Create diagrams of our configuration: http://camel.apache.org/camel-maven-plugin.html -->
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
+                <version>${camel-version}</version>
             </plugin>
         </plugins>
     </reporting>
