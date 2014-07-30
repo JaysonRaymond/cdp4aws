@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cdp4aws</groupId>
+        <artifactId>cdp4aws-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../../parent</relativePath>
+    </parent>
+
+    <artifactId>cdp4aws-examples-requestqueueing-client</artifactId>
+    <name>cdp4aws Example: Request Queueing Client</name>
+    <description>An example of using cdp4aws to implement the Request Queueing pattern from Browsers</description>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <artifactId>cdp4aws-core-client</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <cdp4aws.rq.client.accountId>Must define cdp4aws.rq.client.accountId in ~/.m2/settings.xml
+        </cdp4aws.rq.client.accountId>
+        <cdp4aws.rq.client.accessKeyId>Must define cdp4aws.rq.client.accessKeyId in ~/.m2/settings.xml
+        </cdp4aws.rq.client.accessKeyId>
+        <cdp4aws.rq.client.secretKey>Must define cdp4aws.rq.client.secretKey in ~/.m2/settings.xml
+        </cdp4aws.rq.client.secretKey>
+    </properties>
+
+    <build>
+
+        <plugins>
+
+            <!-- Overlay the example over the resources provided by core -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <overlays>
+                        <overlay>
+                            <artifactId>cdp4aws-core-client</artifactId>
+                            <groupId>${project.groupId}</groupId>
+                        </overlay>
+                    </overlays>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/html</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
+
+            <!-- Forces all projects to install their sources and test sources into the repository, which is ideal
+                 for debugging specific versions of code.
+                 -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-test-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- inherit site.xml across all modules -->
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-site-descriptor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.7</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

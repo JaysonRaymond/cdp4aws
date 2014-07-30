@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cdp4aws</groupId>
+        <artifactId>cdp4aws-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../../parent</relativePath>
+    </parent>
+
+    <name>cdp4aws Example: Request Queueing Worker</name>
+    <artifactId>cdp4aws-examples-requestqueueing-worker</artifactId>
+    <description>An example of using the cdp4aws implementation of the Request Queueing Cloud Design Pattern
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <artifactId>cdp4aws-core-worker</artifactId>
+            <groupId>${project.groupId}</groupId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <!-- Launch our App during build: http://camel.apache.org/camel-maven-plugin.html -->
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>CommandProcessor</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.alexecollins.docker</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <!-- your installed version -->
+                    <version>${docker-maven-plugin-version}</version>
+                    <!-- used for push -->
+                    <username>jaysonraymond</username>
+                    <email>jraymond@accelerantmobile.com</email>
+                </configuration>
+
+            </plugin>
+
+            <plugin>
+                <!-- Package into a single executable jar -->
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create_executable-jar_with_all_dependencies</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>cdp4aws.core.RequestQueueing</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_aws_docker_source_bundle</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assemblies/aws-docker-source-bundle.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- inherit site.xml across all modules -->
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-site-descriptor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+
+            <plugin>
+                <!-- Create diagrams of our configuration: http://camel.apache.org/camel-maven-plugin.html -->
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-maven-plugin</artifactId>
+                <version>${camel-version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

@@ -1,5 +1,6 @@
 packaging:
   add:
     - target/${project.artifactId}-${project.version}-jar-with-dependencies.jar
+    - target/classes/AwsCredentials.properties
 
 tag: dtss/processor:${project.artifactId}-${project.version}

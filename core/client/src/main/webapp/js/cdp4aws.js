@@ -1,7 +1,7 @@
 /**
  * CDP4AWS: Cloud Design Patterns for AWS
  * A library of functions  useful for implementing Cloud Design Patterns using Amazon Web Services.
- * Assumes AWS.config has been injected by client app.
+ * Assumes the AWS SDK JavaScript Library has been loaded.
  */
 var CDP4AWS = (function (AWS) {
 

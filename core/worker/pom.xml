@@ -10,9 +10,9 @@
         <relativePath>../../parent</relativePath>
     </parent>
 
-    <artifactId>cdp4aws-core-processor</artifactId>
-    <name>cdp4aws Request Queueing Processor</name>
-    <description>A Request Queueing Processor used for the RequestQueueing Cloud Design Pattern</description>
+    <artifactId>cdp4aws-core-worker</artifactId>
+    <name>cdp4aws Core: Request Queueing Worker</name>
+    <description>A Request Queueing Worker used for the Request Queueing Cloud Design Pattern</description>
 
     <properties>
         <!--<camel-version>2.13.1</camel-version>-->

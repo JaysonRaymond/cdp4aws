@@ -11,13 +11,14 @@
 
     <groupId>cdp4aws</groupId>
     <artifactId>cdp4aws-core</artifactId>
-    <name>cdp4aws Core Library</name>
+    <name>cdp4aws Core Modules</name>
 
     <description>Reusable functionality useful when implementing Cloud Design Patterns on AWS.</description>
     <packaging>pom</packaging>
 
   <modules>
-    <module>processor</module>
+    <module>client</module>
+    <module>worker</module>
   </modules>
 
 </project>

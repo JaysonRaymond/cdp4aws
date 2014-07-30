@@ -21,7 +21,7 @@
      * Note this should be a different user/role than the CommandProcessor uses because the CommandProcessor will need the
      * ability to create queues (the Result queues) - but we don't want the general public to be able to create them.
      */
-    var cdp4aws = CDP4AWS.create('us-west-2',"448119886995", 'AKIAJ4CYKGBVSWGLV7PA', '1zAhWluSo0GLBBFUhpJeg+U3RH9gs2psdbu8IP4V');
+    var cdp4aws = CDP4AWS.create('us-west-2','${cdp4aws.rq.client.accountId}', '${cdp4aws.rq.client.accessKeyId}', '${cdp4aws.rq.client.secretKey}');
 
     /**
      * Show the outcome of the initial send.

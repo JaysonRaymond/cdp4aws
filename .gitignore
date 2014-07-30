@@ -13,6 +13,5 @@ hs_err_pid*
 **/*.pem
 **/*.iml
 **/node_modules
-
+**/AwsCredentials.properties
 **/target
-**/*/AwsCredentials.properties
