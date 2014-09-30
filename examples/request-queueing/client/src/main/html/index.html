@@ -3,10 +3,8 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Request Queueing Pattern</title>
-    <!-- Bring in (a copy) of the styling used in ArchCental - unrelated to function -->
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/archcentral-docs-alt.css" type="text/css" media="all">
-    <!-- End Archcentral Styling -->
 
     <style type="text/css">
         .layer {
@@ -15,14 +13,22 @@
         .bodyText{
             margin-top: 1%;
             margin-left: 5%;
-            margin-right: 35%;
+            margin-right: 49%;
             margin-bottom: 2%
         }
     </style>
+
+
+    <!-- How to use cdp4aws:          ->
+    <!-- Step #1: import the AWS sdk -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.20.min.js"></script>
 
     <script src="js/view.js"></script> <!-- encapsulate view related code, so as not to distract from using cdp4aws -->
+
+    <!-- Step #2: import cdp4aws -->
     <script src="js/cdp4aws.js"></script>
+
+    <!-- Step #3: call out to cdp4aws.queueRequest -->
     <script type="text/javascript">
         /**
          * Create an instance of cdp4aws RequestQueuer
@@ -49,22 +55,16 @@
             for (var i = 0; i < repeat; i++) {
                 // Queue the command to be requested, specifying functions to call with system state updates.
                 cdp4aws.queueRequest(command,
-
                     // Show the outcome of the initial send.
                     function (command, sendResult) { view.liveSubmission(command, sendResult); },
-
                     // Show any errors encountered when attempting to send results.
                     function (err) { view.liveSendingError(err); },
-
                     // Show the message received.
                     function (message) { view.liveReceive(message); },
-
                     // Show any errors encountered when attempting to receive results.
                     function (err) { view.liveReceiveError(err); },
-
                     // Show we're currently polling for results.
                     function () { view.liveClientPolling(); },
-
                     // Show we're currently done polling for results.
                     function () { view.liveClientPollingDone(); }
                 );
@@ -73,10 +73,8 @@
     </script>
 </head>
 
-<!-- When we are done, delete our Results queue -->
+<!-- Step #4: When done, delete the Results queue. That's all there is to it. -->
 <body onunload="cdp4aws.deleteResultQueueOnExit()">
-
-<!-- .....8<..... RequestQueueing code end ......8<..... -->
 
 <div id="document-title">
 <h1 class="entry-title"><a target="_blank" href="http://archcentral.cloud.corp.dig.com/request-queueing-design-pattern">Request
@@ -101,7 +99,7 @@
                 <div id="tab1">
                     <b>I. Preview:</b> Walk through the process of what will happen
                     <div  class="bodyText">
-                        Step: <button onclick="nextStep()">||></button>
+                        Step: <button onclick="view.nextStep()">||></button>
                     </div>
                     <textarea id="summaryTextArea" cols="70" rows="13" readonly title="Steps"></textarea>
                 </div>
@@ -111,10 +109,10 @@
                     <div  class="bodyText">
                     IP Address:
                     <button onclick="send('IP', 1)">Once</button>
-                    <button onclick="send('IP', 100)">100x</button>
+                    <button onclick="send('IP', 10)">10x</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time:
                     <button onclick="send('TIME', 1)">Once</button>
-                    <button onclick="send('TIME', 100)">100x</button>
+                    <button onclick="send('TIME', 10)">10x</button>
                     </div>
                     <table>
                         <tr>
