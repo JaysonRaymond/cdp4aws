@@ -1,121 +1,299 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
-<meta charset="UTF-8">
-<title>Request Queueing Pattern</title>
-<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.20.js"></script>
-<script type="text/javascript">
-</script>
-<script src="http://htmlpreview.github.io/?https://github.com/JaysonRaymond/cdp4aws/blob/master/core/processor/src/main/html/js/cdp4aws.js"></script>
-<script type="text/javascript">
-    /**
-     * Create an instance of cdp4aws RequestQueuer
-     *
-     * Configure CDP4AWS with AWS region, account number, credentials for this application.
-     *
-     * Because these are so publicly visible it is critical to assure the Role the accessKeyId represents
-     * has only permissions to write to the Requests queue and read/delete from the Results_* queues. Leaving open any
-     * other permissions _will_ be quickly exploited on the web to rack up expensive computing bills
-     * (speaking from direct experience).
-     *
-     * Note this should be a different user/role than the CommandProcessor uses because the CommandProcessor will need the
-     * ability to create queues (the Result queues) - but we don't want the general public to be able to create them.
-     */
-    var cdp4aws = CDP4AWS.create('us-west-2','${cdp4aws.rq.client.accountId}', '${cdp4aws.rq.client.accessKeyId}', '${cdp4aws.rq.client.secretKey}');
+    <meta charset="UTF-8">
+    <title>Request Queueing Pattern</title>
+    <!-- Bring in (a copy) of the styling used in ArchCental - unrelated to function -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css/archcentral-docs-alt.css" type="text/css" media="all">
+    <!-- End Archcentral Styling -->
 
-    /**
-     * Show the outcome of the initial send.
-     */
-    function renderSendOutcome(command, err, sendResult) {
-        if (err) console.error(err);
-        else {
-            var textArea = document.getElementById('commandsTextArea');
-            textArea.value += '\r\nSent command:[' + command + '] in #' + sendResult.MessageId;
+    <style type="text/css">
+        .layer {
+            position: absolute;
         }
-    }
+        .bodyText{
+            margin-top: 1%;
+            margin-left: 5%;
+            margin-right: 35%;
+            margin-bottom: 2%">
+        }
+        .invisible {
+            visibility: hidden;
+        }
+        .visible {
+            visibility: visible;
+        }
+    </style>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc.20.min.js"></script>
 
-    /**
-     * Show the message received.
-     */
-    function renderReceiveResult(message) {
-        var textArea = document.getElementById('resultsTextArea');
-        textArea.value += '\r\nResult ['+message.Body+'] for #' + messages.MessageAttributes['CorrelationId'].StringValue;
-    }
+    <script src="js/cdp4aws.js"></script>
+    <script type="text/javascript">
+        /**
+          * This section of code is only to display the step through - no
+          * actual request queueing happens here - see the next below for that.
+          */
+         var state = [ {
+                description: '',
+                messagesImage: 'empty.gif',
+                overlayImage: 'empty.gif',
+                background: 'RQ-EIP-Background-core.png'
+             }, {
+                 description: 'Client creates a Request containing: a Command, and universally unique Correlation and Session Ids',
+                 messagesImage: 'RQ-EIP-Creating.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description:'Client sends Command Request to ‘Requests’ Queue',
+                 messagesImage: 'RQ-EIP-Sending.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'Command Processor polls for Commands on Request Queue',
+                 messagesImage: 'RQ-EIP-Processing-Receiving.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'Processor transforms (executes) command request to result',
+                 messagesImage: 'RQ-EIP-Processing-Transforming.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'Creates a Results Queue based on unique session id sent from client and sends result to it',
+                 messagesImage: 'RQ-EIP-Processing-Sending.gif',
+                 overlayImage: 'RQ-EIP-MyQueue.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'Meanwhile, client polls for results',
+                 messagesImage: 'RQ-EIP-Polling.gif',
+                 overlayImage: 'RQ-EIP-MyQueue.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'Client receives results, matches correlation id of result to original request and notifies app',
+                 messagesImage: 'RQ-EIP-Receiving.gif',
+                 overlayImage: 'RQ-EIP-MyQueue.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: 'When demand increases.... ',
+                 messagesImage: 'RQ-EIP-Others.gif',
+                 overlayImage: 'RQ-EIP-MyQueue.gif',
+                 background: 'RQ-EIP-Background-clients.png'
+              }, {
+                 description: '... more processors are automatically added',
+                 messagesImage: 'RQ-EIP-Others.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background.png'
+              }, {
+                 description: 'As demand wanes - processors are automatically removed',
+                 messagesImage: 'empty.gif',
+                 overlayImage: 'RQ-EIP-MyQueue.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              }, {
+                 description: "Finally the client deletes it's Queue of Results for the session",
+                 messagesImage: 'empty.gif',
+                 overlayImage: 'empty.gif',
+                 background: 'RQ-EIP-Background-core.png'
+              } ];
 
-    /**
-     * Show any errors encountered when attempting to receive results.
-     */
-    function renderReceiveErrors(err) {
-        console.error(err);
-    }
+         function get(elementId) {
+            return document.getElementById(elementId);
+         }
 
+        function toggle(onElementId, offElementId) {
+            get(onElementId).style.display = '';
+            get(offElementId).style.display = 'none';
+        }
 
-    /**
-     * Send our Command request to an existing Requests queue 'repeat' number of times
-     */
-    function send(command, repeat) {
-        for (var i = 0; i < repeat; i++) {
-            cdp4aws.queueRequest(command,
-                            function(command, err, sendResult) { renderSendOutcome(command, err, sendResult); },
-                            function(message) { renderReceiveResult(message); },
-                            function(err) { renderReceiveErrors(err); }
+         function clearText(textAreaName) {
+             get(textAreaName).value = '';
+         }
+
+         function showText(textAreaName, text) {
+             var textArea = get(textAreaName);
+             textArea.value += text;
+             textArea.scrollTop = textArea.scrollHeight
+         }
+
+         function showImage(layerName, imageName) {
+             get(layerName).src = 'img/'+imageName;
+         }
+
+         var step = 0;
+
+         function nextStep() {
+             if (++step < state.length) {
+                 showText('summaryTextArea', '\r\nStep #' + step + ': ' + state[step].description);
+                 showImage("Mine",  state[step].messagesImage);
+                 showImage("Overlay", state[step].overlayImage);
+                 showImage("Backdrop", state[step].background);
+             } else {
+                 //  reset
+                 step = 0;
+                 clearText('summaryTextArea');
+             }
+         }
+
+<!-- Begin actual Request Queueing code here....8<..... -->
+
+        /**
+         * Create an instance of cdp4aws RequestQueuer
+         *
+         * Configure CDP4AWS with AWS region, account number, credentials for this application.
+         *
+         * Because these are  publicly visible it is critical to assure the Role the accessKeyId represents
+         * has only permissions to write to the Requests queue and read/delete from the Results_* queues. Leaving open
+         * other permissions can be quickly exploited, racking up expensive computing bills
+         *
+         * Note this should be a different user/role than the CommandProcessor uses because the CommandProcessor will need the
+         * ability to create queues (the Result queues) - but we don't want the general public to be able to create them.
+         */
+        var cdp4aws = CDP4AWS.create('us-west-2', '${cdp4aws.awsAccountId}', '${cdp4aws.rq.client.accessKeyId}', '${cdp4aws.rq.client.secretKey}');
+
+        /**
+         * Send our Command request to an existing Requests queue 'repeat' number of times
+         */
+        function send(command, repeat) {
+            showImage("Mine", 'RQ-EIP-Sending-Live.gif');
+            showImage("Backdrop", 'RQ-EIP-Background.png');
+
+            for (var i = 0; i < repeat; i++) {
+                // Queue the command to be requested, specifying functions to call with system state updates.
+                cdp4aws.queueRequest(command,
+
+                    // Show the outcome of the initial send.
+                    function (command, sendResult) {
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+                        showText('commandsTextArea', '\r\nSent command:[' + command + '] in #' + sendResult.MessageId);
+                        showImage("Mine", "RQ-EIP-Processing-Live.gif");
+                    },
+
+                    // Show any errors encountered when attempting to send results.
+                    function (err) {
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+                        console.error(err);
+                        showImage("Mine", "RQ-EIP-SendingError.gif");
+                    },
+
+                    // Show the message received.
+                    function (message) {
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+                        showText('resultsTextArea', '\r\nResult [' + message.Body + '] for #' + message.MessageAttributes['CorrelationId'].StringValue);
+                        showImage("Mine", "RQ-EIP-Receiving-Live.gif");
+                    },
+
+                    // Show any errors encountered when attempting to receive results.
+                    function (err) {
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+                        console.error(err);
+                        showImage("Mine", "RQ-EIP-ReceivingError.gif");
+                    },
+
+                    // Show we're currently polling for results.
+                    function () {
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+//                        showImage("Mine", "RQ-EIP-Polling-Live.gif");
+                    },
+
+                    // Show we're currently done polling for results.
+                    function () {
+//                        showImage("Mine", "empty.gif");
+                        showImage("Backdrop", 'RQ-EIP-Background.png');
+                    }
             );
+            }
         }
-    }
     </script>
 </head>
 
 <!-- When we are done, delete our Results queue -->
 <body onunload="cdp4aws.deleteResultQueueOnExit()">
 
-<h3><a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
-        Queueing</a> on <a href="http://aws.amazon.com/sqs/">AWS SQS</a>.
-</h3>
+<!-- .....8<..... RequestQueueing code end ......8<..... -->
+
+<div id="document-title">
+<h1 class="entry-title"><a target="_blank" href="http://archcentral.cloud.corp.dig.com/request-queueing-design-pattern">Request
+    Queueing</a> on <a target="_blank" href="http://aws.amazon.com/sqs/">AWS SQS</a>.
+</h1>
+</div>
+
+<div  class="bodyText">
 <p>
     This is an example of using the
-    <a href="https://docs.google.com/document/d/1MZrJCoUmc-69QqXrt2PeeZaxpTkoDtrtK8OKusnJ36c/edit?usp=sharing">Request
-    Queueing</a> Cloud Design Pattern.
-</p>
-<p>The idea is to asynchronously send commands to a request queue so that it can be handled by a scalable number of
+    <a target="_blank" href="http://archcentral.cloud.corp.dig.com/request-queueing-design-pattern">Request Queueing</a>
+    Cloud Design Pattern. The idea is to asynchronously send commands to a request queue so that it can be handled by a scalable number of
     nodes (horizontal scaling). The results from all of the nodes are placed on a result queue (established by this
     client) which is polled, rendered and subsequently deleted by this client.
 </p>
-
-<p>
-    The <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/javascript-client/index.html">client
-    implementation</a> uses the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/index.html">AWS SQS
-    Javascript library</a> which allows desktop/settop/mobile browsers and hybrid applications to all directly access
-    the SQS service without requiring an intermediate gateway.
-</p>
-<p>
-    The backend
-    <a href="https://github.com/JaysonRaymond/request-queueing/blob/master/command-processor/src/main/java/CommandProcessor.java">
-    implementation of the Command Processor</a> leverages <a href="http://camel.apache.org/">Apache Camel</a> for its
-    significant utility and can be run on <a href="http://aws.amazon.com/ec2/">EC2</a> or better yet,
-    <a href="http://aws.amazon.com/elasticbeanstalk/">Elastic Beanstalk</a> instances.
-</p>
-<br>
-
-<div id="commandButtons">
-    Command to Request:
-    <ul>
-        <li>
-            <button onclick="send('IP', 1)">Report the IP address of the compute node fulfilling the request</button>
-            <button onclick="send('IP', 100)">100x</button>
-        </li>
-        <li>
-            <button onclick="send('TIME', 1)">Report the time at which the Command was processed by a compute node</button>
-            <button onclick="send('TIME', 100)">100x</button>
-        </li>
-    </ul>
-    <textarea id="commandsTextArea" cols="53" rows="25" readonly></textarea>
-    <!--<img src="RP-Sequence-BuildingRoute.gif">-->
-    <!--<img src="RP-Sequence-Others.gif">-->
-    <!--<img src="RP-Sequence-Sending.gif">-->
-    <!--<img src="RP-Sequence-Processing.gif">-->
-    <!--<img src="RP-Sequence-Receiving.gif">-->
-    <textarea id="resultsTextArea" cols="70" rows="25" readonly></textarea>
 </div>
+
+<table style="margin: 10px; padding: 10px">
+    <tr>
+        <td>
+            <div>
+                <div id="tab1">
+                    <b>I. Preview:</b> Walk through the process of what will happen
+                    <div  class="bodyText">
+                        Step: <button onclick="nextStep()">||></button>
+                    </div>
+                    <textarea id="summaryTextArea" cols="70" rows="13" readonly title="Steps"></textarea>
+                </div>
+                <br>
+                <div id="tab2">
+                    <b>II. Run Live:</b> Request information from current Command Processor nodes at AWS<br>
+                    <div  class="bodyText">
+                    IP Address:
+                    <button onclick="send('IP', 1)">Once</button>
+                    <button onclick="send('IP', 100)">100x</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time:
+                    <button onclick="send('TIME', 1)">Once</button>
+                    <button onclick="send('TIME', 100)">100x</button>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>
+                                <textarea id="commandsTextArea" cols="53" rows="12" readonly title="Sending"></textarea>
+                            </td>
+                            <td>
+                                <textarea id="resultsTextArea" cols="70" rows="12" readonly title="Receiving"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center">Sending</th>
+                            <th style="text-align: center">Receving</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+        <td style="width: 897px;">
+            <div style="padding: 10px">
+                <span class="layer" style="z-index: -1"><img id="Backdrop" src="img/RQ-EIP-Background-core.png" alt="Diagram as backdrop." width="897" height="688"></span>
+                <span class="layer" style="z-index:50"><img id="Overlay" src="img/empty.gif" alt="Walk through text overlay." width="897" height="688"></span>
+                <span class="layer" style="z-index:100"><img id="Others" src="img/empty.gif" alt="Overlay of activity of others." width="897" height="688"></span>
+                <span class="layer" style="z-index:200"><img id="Mine" src="img/empty.gif" alt="Overlay of my activity." width="897" height="688"></span>
+            </div>
+        </td>
+    </tr>
+</table>
+<div style="padding:15px">
+<b>III. Dig Deeper:</b> Here's how it's done<br>
+    <div class="bodyText">
+<p>
+    The <a target="_blank" href="http://github.disney.com/RAYMJ023/cdp4aws/blob/master/examples/request-queueing/client/src/main/html/index.html">
+        client implementation</a> uses the
+    <a target="_blank" href="http://github.disney.com/RAYMJ023/cdp4aws/blob/master/core/client/src/main/webapp/js/cdp4aws.js">
+        cdp4aws Javascript library</a>
+    to allow desktop/settop/mobile browsers and hybrid applications to directly access the SQS service without requiring
+    an intermediate gateway and execute the request.
 <br>
+    The backend
+    <a target="_blank"
+        href="http://github.disney.com/RAYMJ023/cdp4aws/blob/master/examples/request-queueing/worker/src/main/java/cdp4aws/examples/CommandProcessor.java">
+        implementation of the Command Processor</a> leverages <a target="_blank" href="http://camel.apache.org/">Apache
+    Camel</a> for its significant utility and can be run on <a target="_blank" href="http://aws.amazon.com/elasticbeanstalk/">
+    Elastic Beanstalk</a> on <a target="_blank" href="http://aws.amazon.com/ec2/">EC2</a> instances.
+</p>
+</div>
+</div>
 </body>
 </html>

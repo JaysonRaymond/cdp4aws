@@ -50,7 +50,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>CommandProcessor</mainClass>
+                    <mainClass>cdp4aws.core.RequestQueueing</mainClass>
                 </configuration>
             </plugin>
 

@@ -24,12 +24,11 @@
     </dependencies>
 
     <properties>
-        <cdp4aws.rq.client.accountId>Must define cdp4aws.rq.client.accountId in ~/.m2/settings.xml
-        </cdp4aws.rq.client.accountId>
-        <cdp4aws.rq.client.accessKeyId>Must define cdp4aws.rq.client.accessKeyId in ~/.m2/settings.xml
-        </cdp4aws.rq.client.accessKeyId>
-        <cdp4aws.rq.client.secretKey>Must define cdp4aws.rq.client.secretKey in ~/.m2/settings.xml
-        </cdp4aws.rq.client.secretKey>
+        <cdp4aws.awsAccountId>Must define cdp4aws.awsAccountId in ~/.m2/settings.xml</cdp4aws.awsAccountId>
+        <cdp4aws.rq.client.accessKeyId>Must define cdp4aws.rq.client.accessKeyId in ~/.m2/settings.xml</cdp4aws.rq.client.accessKeyId>
+        <cdp4aws.rq.client.secretKey>Must define cdp4aws.rq.client.secretKey in ~/.m2/settings.xml</cdp4aws.rq.client.secretKey>
+        <cdp4aws.rq.worker.accessKeyId>Must define cdp4aws.rq.worker.accessKeyId in ~/.m2/settings.xml</cdp4aws.rq.worker.accessKeyId>
+        <cdp4aws.rq.worker.secretKey>Must define cdp4aws.rq.worker.secretKey in ~/.m2/settings.xml</cdp4aws.rq.worker.secretKey>
     </properties>
 
     <build>

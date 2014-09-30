@@ -1,0 +1,688 @@
+#top-nav ul.menu, #colophon #access-footer ul.menu {
+  margin-left: -30px; }
+
+#document-title {
+  position: relative;
+  margin: 20px 0 0 47px;
+  clear: right;
+  float: none;
+  clear: both; }
+  #document-title h1.entry-title {
+    display: inline-block;
+    padding: 0 0 0 0;
+    clear: right; }
+
+.single-technical_document #main #content .breadcrumbs-inner,
+.single-implementation #main #content .breadcrumbs-inner {
+  margin: 0 50px; }
+
+#main #content .breadcrumbs-inner {
+  margin: 0 76px; }
+
+article.technical_document {
+  padding-left: 2%;
+  padding-right: 2%;
+  border: none; }
+
+.single.two-column #content .hentry {
+  border: none; }
+
+.the-document {
+  padding: 5px;
+  width: 850px; }
+
+.entry-content {
+  padding-top: 5px !important; }
+
+#document-intro-wrapper {
+  width: auto;
+  margin-bottom: 0;
+  margin: 10px 0 0 50px;
+  font-size: 12pt;
+  font-style: italic; }
+  #document-intro-wrapper .intro-question {
+    font-style: normal;
+    font-weight: bold;
+    margin-bottom: 10px; }
+
+.document-summary, .document-summary-cta {
+  overflow: hidden;
+  margin: 0 auto 15px auto;
+  width: 100%;
+  display: inline-block;
+  clear: both; }
+  .document-summary > div, .document-summary-cta > div {
+    float: left;
+    padding-bottom: 9999px;
+    margin-bottom: -9999px;
+    display: inline-block; }
+    .document-summary > div h3, .document-summary > div h4, .document-summary-cta > div h3, .document-summary-cta > div h4 {
+      margin-bottom: 5px;
+      padding: 5px 0px 5px 20px; }
+  .document-summary ul, .document-summary-cta ul {
+    margin-top: 0;
+    padding-top: 0;
+    list-style-type: disc; }
+  .document-summary .summary.thirds, .document-summary-cta .summary.thirds {
+    width: 33%; }
+  .document-summary .summary.halves, .document-summary-cta .summary.halves {
+    width: 50%; }
+  .document-summary .summary.whole, .document-summary-cta .summary.whole {
+    width: 100%; }
+  .document-summary .simple-list-printout, .document-summary .link-list-printout, .document-summary-cta .simple-list-printout, .document-summary-cta .link-list-printout {
+    float: left;
+    font-size: 11pt; }
+  .document-summary div, .document-summary-cta div {
+    color: #444; }
+    .document-summary div h3, .document-summary-cta div h3 {
+      background: linear-gradient(to bottom, #eeeeee 0%, white 100%) repeat scroll 0 0 transparent; }
+
+div .document-how > ul {
+  margin: 0;
+  padding: 0; }
+  div .document-how > ul li {
+    margin: 0 auto;
+    width: 90%; }
+div .document-how a, div .document-how a:link, div .document-how a:visited {
+  width: 100;
+  text-align: center; }
+  div .document-how a:last-child, div .document-how a:link:last-child, div .document-how a:visited:last-child {
+    margin-bottom: 10px; }
+div .document-how h3 {
+  padding-left: 0; }
+
+.incom-cancel.incom-cancel-link:last-child {
+  display: none; }
+
+.interactive-doc-footer {
+  margin: 15px 0;
+  width: 859px;
+  padding: 5px; }
+
+.doc-footer-left {
+  float: left; }
+
+.doc-footer-right {
+  float: right; }
+
+.ratings-container {
+  display: inline-block;
+  width: 500px; }
+  .ratings-container .ratings-container-intro {
+    width: 120px; }
+  .ratings-container .post-ratings {
+    width: 350px; }
+  .ratings-container > div {
+    float: left; }
+
+.rostr-author {
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid lightgray;
+  border-radius: 3px; }
+
+.rostr-author-img {
+  float: left;
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  padding: 0; }
+  .rostr-author-img img {
+    width: 64px;
+    height: 64px;
+    margin: 0;
+    padding: 0; }
+
+.rostr-author-info {
+  float: left;
+  font-size: 0.9em;
+  margin-left: 10px; }
+
+.rostr-name {
+  font-weight: bold; }
+
+/** 
+ * Archive
+ */
+.archive .page-title {
+  line-height: 1.1em; }
+
+.page-header.visible, .page-header {
+  display: block;
+  margin-bottom: 5px;
+  margin-left: 75px;
+  padding: 30px 0 15px 0; }
+  .page-header.visible h1, .page-header h1 {
+    font-size: 20pt;
+    width: 100%;
+    line-height: 1.3em; }
+
+.summaries {
+  margin-left: 75px;
+  margin-top: 25px;
+  position: relative;
+  column-count: 1;
+  -moz-column-count: 1;
+  -webkit-column-count: 1; }
+
+.design-pattern-summary {
+  min-height: 90px;
+  position: relative;
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid-column;
+  margin-bottom: 20px; }
+  .design-pattern-summary .design-pattern-link {
+    position: relative;
+    top: -5px; }
+    .design-pattern-summary .design-pattern-link a {
+      font-size: 0.8em; }
+
+.design-pattern-title {
+  display: inline-block;
+  font-size: 13pt;
+  font-weight: bold;
+  position: relative; }
+  .design-pattern-title img {
+    position: relative;
+    top: 8px;
+    width: 30px;
+    height: 30px; }
+  .design-pattern-title span {
+    display: inline-block;
+    position: relative;
+    top: 3px; }
+  .design-pattern-title a {
+    color: black; }
+    .design-pattern-title a:hover {
+      border-bottom: 1px solid blue; }
+
+/** 
+ * In-Doc Comments
+ */
+#incom_wrapper .incom-bubble {
+  margin-top: 41px; }
+
+div.incom-comments-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  margin: 20px;
+  border: 2px groove black; }
+  div.incom-comments-wrapper h3 {
+    display: none; }
+  div.incom-comments-wrapper p.logged-in-as {
+    margin-bottom: 10px; }
+  div.incom-comments-wrapper .comment-form-comment label {
+    display: none; }
+  div.incom-comments-wrapper #comments-and-form .comment .comment-body p {
+    margin-bottom: 30px; }
+  div.incom-comments-wrapper #comments-and-form .ldc-ul_cont {
+    bottom: 24px; }
+  div.incom-comments-wrapper #comments-and-form .incom-info-icon {
+    width: 0;
+    height: 0;
+    position: absolute;
+    opacity: 0; }
+  div.incom-comments-wrapper #comments-and-form #respond {
+    background: none;
+    border: none;
+    border-radius: none;
+    margin: 0;
+    padding: 0 2em;
+    position: relative;
+    width: auto;
+    display: none; }
+    div.incom-comments-wrapper #comments-and-form #respond .comment-form-comment {
+      margin-top: -40px; }
+    div.incom-comments-wrapper #comments-and-form #respond .form-submit {
+      float: left; }
+      div.incom-comments-wrapper #comments-and-form #respond .form-submit #submit {
+        left: 0;
+        padding-right: 22px; }
+    div.incom-comments-wrapper #comments-and-form #respond:last-child {
+      visibility: none; }
+  div.incom-comments-wrapper a.incom-cancel {
+    top: 300px;
+    position: absolute; }
+
+.comment-datetime {
+  font-weight: 300;
+  font-style: italic;
+  color: lightblue;
+  font-size: 0.8em;
+  margin-top: 4px; }
+
+/**
+ * Front page 
+ */
+#featured-stream {
+  width: 100%; }
+  #featured-stream ul {
+    margin-left: 0;
+    list-style-type: none; }
+  #featured-stream li {
+    margin-left: 5px;
+    overflow: visible; }
+  #featured-stream h3 {
+    margin-top: 0; }
+    #featured-stream h3:not(:first-child) {
+      margin-top: 12px; }
+  #featured-stream .media-body {
+    padding-top: 0;
+    position: relative;
+    top: -3px; }
+  #featured-stream .media-heading {
+    margin-bottom: 0; }
+  #featured-stream .muted-source {
+    position: relative;
+    top: -10px; }
+  #featured-stream .media-object {
+    width: 36px;
+    height: 36px; }
+
+/** 
+ * Design Codes
+ */
+.design-code {
+  border: 1px solid;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 7px;
+  border-radius: 8px;
+  cursor: default;
+  position: relative;
+  overflow: visible; }
+  .design-code a {
+    text-decoration: none; }
+
+.dc-DP {
+  border-color: #47CCCC;
+  color: #47CCCC; }
+  .dc-DP.invert-colors {
+    background-color: #47CCCC;
+    color: white;
+    border-color: black; }
+
+.dc-AS {
+  border-color: #FF0000;
+  color: #FF0000; }
+  .dc-AS.invert-colors {
+    background-color: #FF0000;
+    color: white;
+    border-color: black; }
+
+.dc-BP {
+  border-color: #9999FF;
+  color: #9999FF; }
+  .dc-BP.invert-colors {
+    background-color: #9999FF;
+    color: white;
+    border-color: black; }
+
+.dc-M {
+  border-color: #339933;
+  color: #339933; }
+  .dc-M.invert-colors {
+    background-color: #339933;
+    color: white;
+    border-color: black; }
+
+.dc-RA {
+  border-color: #FF9900;
+  color: #FF9900; }
+  .dc-RA.invert-colors {
+    background-color: #FF9900;
+    color: white;
+    border-color: black; }
+
+.dc-TA {
+  border-color: #993333;
+  color: #993333; }
+  .dc-TA.invert-colors {
+    background-color: #993333;
+    color: white;
+    border-color: black; }
+
+.dc-TR {
+  border-color: #2E2EE6;
+  color: #2E2EE6; }
+  .dc-TR.invert-colors {
+    background-color: #2E2EE6;
+    color: white;
+    border-color: black; }
+
+.getstarted-heading, .scope-button {
+  width: 120px;
+  height: 100px;
+  margin-bottom: 12px;
+  position: relative;
+  box-shadow: 5px 6px 6px #888888; }
+
+.design-code-code {
+  color: black;
+  position: absolute;
+  font-size: 30px;
+  text-align: center;
+  top: 15px;
+  width: 100%; }
+
+.design-code-more {
+  position: absolute;
+  bottom: 5px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  line-height: 16px; }
+
+#myCarousel {
+  background: #bbb;
+  width: 100%;
+  margin: 0 0 10px 0; }
+  #myCarousel img {
+    min-width: 300px;
+    height: 350px;
+    width: 100%; }
+  #myCarousel .carousel-indicators {
+    top: 0;
+    margin: 0;
+    position: absolute;
+    right: 21px;
+    width: auto;
+    text-align: right;
+    height: 20px; }
+  #myCarousel .carousel-caption {
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+    width: 100%;
+    left: 0%;
+    right: 0%;
+    background: #333; }
+  #myCarousel .carousel-control {
+    background: #000;
+    color: #fff;
+    position: absolute;
+    top: 48%;
+    width: 40px;
+    height: 40px;
+    font-size: 45pt;
+    font-weight: 300;
+    line-height: 17px;
+    border: 5px solid white;
+    opacity: 1;
+    border-radius: 100%;
+    text-align: center;
+    margin-top: -20px; }
+    #myCarousel .carousel-control.left {
+      left: 15px; }
+    #myCarousel .carousel-control.right {
+      right: 15px;
+      padding-left: 3px; }
+
+.home-wrap {
+  margin: 0;
+  padding: 0;
+  margin: 0 auto;
+  display: block;
+  float: none;
+  font-size: 0.9em; }
+  .home-wrap h3 {
+    font-size: 1.2em; }
+  .home-wrap h4 {
+    font-size: 1.1em; }
+
+@media screen and (min-width: 768px) {
+  .summaries {
+    margin-left: 75px;
+    margin-top: 25px;
+    column-count: 2;
+    -moz-column-count: 2;
+    -webkit-column-count: 2; }
+
+  #myCarousel {
+    margin: 20px 2.5%;
+    width: 50%;
+    min-height: 310px; }
+    #myCarousel img {
+      min-height: 310px; }
+
+  #featured-stream {
+    display: block;
+    position: relative;
+    width: 40%;
+    max-height: 340px;
+    margin: 20px 2.5%; }
+    #featured-stream h3:not(:first-child) {
+      margin-top: 60px; }
+
+  .home-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 858px;
+    margin-left: 50%;
+    left: -400px;
+    height: 375px;
+    width: 100%; }
+    .home-wrap > div {
+      float: left; } }
+@media screen and (min-width: 1200px) {
+  .home-wrap {
+    max-width: 1200px;
+    width: 100%;
+    left: -600px; }
+    .home-wrap > div {
+      float: left; }
+
+  #featured-stream {
+    display: block;
+    position: relative;
+    width: 40%;
+    font-size: 1.1em;
+    max-height: 340px; }
+    #featured-stream h3 {
+      font-size: 1.6em; }
+    #featured-stream h4 {
+      font-size: 1.4em; } }
+#solutions-list article {
+  height: 320px; }
+
+/**
+ * Search Box
+ */
+#branding #s {
+  width: 100px;
+  background: url("../images/search.png") no-repeat scroll 5px 3px #f0f0f0;
+  height: auto; }
+
+/** 
+ * Architecture Domains Classes
+ */
+.domain-icon {
+  width: 150px;
+  height: 150px; }
+
+.application-icon {
+  background: black url("../images/app-icon.png") top left no-repeat;
+  background-size: 100% 100%; }
+
+.cloud-icon {
+  background: transparent url("../images/cloud-icon.png") top left no-repeat;
+  background-size: 100% 100%; }
+
+.data-icon {
+  background: transparent url("../images/database-icon.png") center no-repeat;
+  background-size: 80% 100%; }
+
+.infrastructure-icon {
+  background: transparent url("../images/infra-icon.png") top left no-repeat;
+  background-size: 100% 100%; }
+
+.security-icon {
+  background: transparent url("../images/padlock-icon.png") no-repeat;
+  background-size: 80% 100%;
+  background-position: center; }
+
+.domain-listing {
+  list-style-type: none;
+  display: inline-block; }
+  .domain-listing li {
+    position: relative;
+    float: left;
+    margin: 50px 30px; }
+  .domain-listing .domain-label {
+    position: absolute;
+    bottom: -40px;
+    width: 100%;
+    text-align: center;
+    color: black;
+    font-size: 1.7em; }
+
+/**
+ * Filters on Archive
+ */
+.filter-buttons-wrapper {
+  position: relative;
+  text-align: left;
+  margin-left: 75px;
+  text-align: center; }
+
+.filter-buttons {
+  list-style-type: none;
+  display: inline-block;
+  margin: 20px auto;
+  position: relative; }
+
+a.domain-button, .domain-button {
+  height: 80px;
+  width: 80px;
+  float: left;
+  margin: 0 10px 30px 10px;
+  opacity: 0.4;
+  position: relative; }
+  a.domain-button .domain-desc, .domain-button .domain-desc {
+    display: block;
+    opacity: 1;
+    font-size: 0.7em;
+    position: relative;
+    bottom: -90px;
+    text-align: center;
+    color: black; }
+  a.domain-button:hover, .domain-button:hover {
+    opacity: 1; }
+  a.domain-button.selected, .domain-button.selected {
+    opacity: 1; }
+
+.document_scope-button {
+  float: left;
+  width: 80px;
+  height: 70px;
+  margin: 5px;
+  opacity: 0.55; }
+  .document_scope-button:hover {
+    opacity: 1; }
+  .document_scope-button.selected {
+    opacity: 1; }
+  .document_scope-button .design-code-code {
+    font-size: 1.1em; }
+  .document_scope-button .design-code-more {
+    font-size: 0.7em;
+    line-height: 1em; }
+
+.mini-domain-icon {
+  position: relative;
+  width: 50%;
+  height: 15px;
+  left: -8px;
+  float: left; }
+
+/**
+ * END Architecture Domains
+ */
+.center {
+  width: 100%;
+  text-align: center; }
+
+.showhide-links-area {
+  width: 100%;
+  margin-left: 75px;
+  margin-right: 75px;
+  display: inline-block;
+  max-width: 875px; }
+
+.showhide-link {
+  color: blue;
+  font-style: italic;
+  text-decoration: underline;
+  max-width: 875px;
+  text-align: center; }
+  .showhide-link:hover {
+    cursor: pointer;
+    color: lightblue; }
+
+.link-buttons-wrapper {
+  padding-left: 40px; }
+  .link-buttons-wrapper .document_scope-button {
+    width: 100px;
+    height: 90px; }
+    .link-buttons-wrapper .document_scope-button .design-code-code {
+      font-size: 1.6em; }
+    .link-buttons-wrapper .document_scope-button .design-code-more {
+      font-size: 0.9em; }
+
+#pagination {
+  display: block;
+  clear: both;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  left: 75px;
+  bottom: 0; }
+
+/**
+ * Archive
+ */
+.archive-rating {
+  font-size: 0.7em; }
+
+/**
+ * Yammer Controls
+ */
+#yammer-like-button.docpage {
+  float: right; }
+
+#yammer-liked-button.docpage {
+  float: right; }
+
+#yammer-follow-button.docpage {
+  float: right;
+  margin-top: 30px; }
+
+#yammer-follow-user-button.docpage {
+  float: right;
+  margin-top: 30px; }
+
+/**
+ * Events
+ */
+div#tribe-events-bar {
+  width: 875px;
+  margin-left: 75px; }
+
+#tribe-events-content.tribe-events-list {
+  width: 875px;
+  margin-left: 75px; }
+
+/**
+ * 'Fixing' inconsistencies.  ALl this stuff ultimately needs to happen from the root level 
+ *  instead of using bandaids.  But currently time is of the essence.
+ */
+body.page #title-wrap .entry-title {
+  padding-left: 77px; }
+body.page .breadcrumbs-inner {
+  margin-left: 78px; }
+
+body.single.single-technical_document article {
+  padding-left: 45px; }
+
+body.single.single-post article {
+  padding-left: 35px; }

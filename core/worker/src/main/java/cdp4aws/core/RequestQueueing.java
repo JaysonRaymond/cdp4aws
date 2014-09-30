@@ -72,7 +72,7 @@ public class RequestQueueing {
      *
      * Override this class when you want to delegate fulfilling the request to an external service.
      * To override the default RouteBuilder specify the fully qualified class name of your implementation in the text
-     * file META-INF/RequestQueueing.RouteBuilder on the classpath.
+     * file META-INF/services/cdp4aws.core.RequestQueueing.RouteBuilder on the classpath.
      */
     public static class RouteBuilder extends org.apache.camel.builder.RouteBuilder {
         private static ServiceLoader<RouteBuilder> serviceLoader =
@@ -90,7 +90,7 @@ public class RequestQueueing {
                     }
                 }
                 // default
-                builder = new RouteBuilder();
+                builder = new RouteBuilder().withEndpoint(endpoint).withAccessKey(accessKey).withSecretKey(secretKey);
             }
             return builder;
         }

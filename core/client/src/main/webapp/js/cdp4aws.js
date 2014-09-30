@@ -89,8 +89,11 @@ var CDP4AWS = (function (AWS) {
      * client and server, but also fewer header parsings which is particularly costly to mobile device battery usage
      * and responsiveness.
      * See: http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-long-polling.html
+     * @receiveErrorCallback = function(err) called with error encountered during reception
+     * @receiveStartCallback = function() called when an attempt to receive occurs
+     * @receiveDoneCallback = function() called when no more messages are expected
      */
-    function receive() {
+    function receive(receiveErrorCallback, receiveStartCallback, receiveDoneCallback) {
 
         if (resultsQueue === undefined)
         // We'll set the Queue to hold the connection for 1 second, and reconnect every 2.
@@ -106,23 +109,37 @@ var CDP4AWS = (function (AWS) {
             ]
         }
 
+        receiveStartCallback();
+
         resultsQueue.receiveMessage(params, function (err, data) {
             if (err) {
-                backOff += backOff;
-                console.error("Encountered the following error while attempting to receive, will retry again in "+backOff+" seconds.\r\n"+err);
-                setTimeout(function(){ receive() }, backOff * 1000);
-                return;
+                if (err.toString().indexOf("AWS.SimpleQueueService.NonExistentQueue: The specified queue does not exist") > 0) {
+                    backOff += backOff;
+                    console.info("Results Queue not found yet, retrying again in " + backOff + " seconds.\r\n");
+                    setTimeout(function () {
+                        receive(receiveErrorCallback, receiveStartCallback, receiveDoneCallback)
+                    }, backOff * 1000);
+                    return;
+                } else {
+                    receiveErrorCallback(err);
+                }
             }
             else if (data) {
                 messagesReceived += data.Messages.length;
                 for (var i = 0; i < data.Messages.length; i++) {
-                    var correlationId = messages[i].MessageAttributes['CorrelationId'].StringValue;
+                    var correlationId = data.Messages[i].MessageAttributes['CorrelationId'].StringValue;
                     requests[correlationId](data.Messages[i]);
                 }
                 removeHandledMsgsFromQueue(data.Messages);
                 backOff = 1;
             }
-            if (messagesReceived < messagesSent) receive();
+            if (messagesReceived < messagesSent) {
+                // more to get..
+                receive(receiveErrorCallback, receiveStartCallback, receiveDoneCallback);
+            } else {
+                // all outstanding messages accounted for.
+                receiveDoneCallback();
+            }
         });
     }
 
@@ -133,8 +150,11 @@ var CDP4AWS = (function (AWS) {
      * @sendCallback = function(request, sendStatus) where 'request' will be your original request and sendStatus is the
      * status returned after accepting the request
      * @receiveCallback = function(result) where 'result' is the result of your request
+     * @receiveErrorCallback = function(error) where 'error' is the error received while attempting to receive
+     * @receiveStartCallback = function() called when an attempt to receive occurs
+     * @receiveDoneCallback = function() called when no further messages are expected
      */
-    instance.queueRequest = function (request, sendCallback, receiveCallback) {
+    instance.queueRequest = function (request, sendCallback, sendErrorCallback, receiveCallback, receiveErrorCallback, receiveStartCallback, receiveDoneCallback) {
         if (requestsQueue === undefined)
             requestsQueue = new AWS.SQS({params: {QueueUrl: getRequestsQueueUrl()}});
 
@@ -149,13 +169,13 @@ var CDP4AWS = (function (AWS) {
             },
             function (err, data) {
                 if (err) {
-                    sendCallback(request, err, data);
+                    sendErrorCallback(err);
                 }
                 else {
                     messagesSent++;
                     requests[data.MessageId] = receiveCallback;
-                    sendCallback(request, err, data);
-                    receive();
+                    sendCallback(request, data);
+                    receive(receiveErrorCallback, receiveStartCallback, receiveDoneCallback);
                 }
             }
         );

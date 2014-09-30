@@ -10,14 +10,22 @@
         <file>
             <source>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
             <outputDirectory></outputDirectory>
+            <filtered>false</filtered>
         </file>
         <file>
             <source>src/main/docker/worker/conf.yml</source>
             <outputDirectory></outputDirectory>
+            <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/docker/worker/Dockerfile</source>
             <outputDirectory></outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/main/docker/worker/AwsCredentials.properties</source>
+            <outputDirectory></outputDirectory>
+            <filtered>true</filtered>
         </file>
     </files>
 </assembly>
